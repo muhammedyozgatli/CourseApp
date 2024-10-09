@@ -36,6 +36,22 @@ UI.prototype.deleteCourse = function(element){
     }
 }
 
+UI.prototype.showAlert = function(message,className){
+    var alert = `
+         <div class="alert alert-${className}">
+                ${message}
+         </div>   
+    `;
+
+    const row = document.querySelector('.row');
+    //beforeBegin, afterBegin, beforeEnd, afterEnd
+    row.insertAdjacentHTML('beforeBegin',alert);
+
+    setTimeout(()=>{
+        document.querySelector('.alert').remove();
+    },3000);
+}
+
 
 document.getElementById('new-course').addEventListener('submit',
     function(e){
@@ -49,17 +65,22 @@ document.getElementById('new-course').addEventListener('submit',
 
         //UI olusturuluyor
         const ui = new UI();
-        
-        //course listesi ekleniyor
-        ui.addCourseToList(course);
+        if(title==='' || instructor ==='' || image ===''){
+            ui.showAlert('Please complete the form','warning');
+        }else{
+            //course listesi ekleniyor
+            ui.addCourseToList(course);
 
-        //clear controls
-        ui.clearControls();
+            //clear controls
+            ui.clearControls();
+            ui.showAlert('the course has been added','success');
+        }   
 
         e.preventDefault(); //Submit olayını kesmek için
 });
 
 document.getElementById('course-list').addEventListener('click',function(e){
-const ui = new UI();
-ui.deleteCourse(e.target);
+        const ui = new UI();
+        ui.deleteCourse(e.target);
+        ui.showAlert('the course has been deleted','danger');
 });
